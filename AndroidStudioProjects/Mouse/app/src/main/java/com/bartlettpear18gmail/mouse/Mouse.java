@@ -22,12 +22,13 @@ import java.net.UnknownHostException;
 
 import static com.bartlettpear18gmail.mouse.Position.displacement;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    //Accelerometer Set up
+public class Mouse extends AppCompatActivity implements SensorEventListener {
+
+    //Accelerometer setup
     private SensorManager mSensorManager;
     private Sensor mAccel;
 
-
+    //Server setup
     public static Socket client;
     private static final int SERVER_PORT = 10000;
     private static final String SERVER_IP = "10.0.0.139";
@@ -122,10 +123,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void rightClick(View view) {
         System.out.println("Right Click");
     }
-    /*
-    public static void testClick(View view) throws IOException {
-        DataOutputStream outToServer = new DataOutputStream(client.getOutputStream());
-        outToServer.writeBytes("Android test" + '\n');
-        client.close();
-    }*/
+
 }
