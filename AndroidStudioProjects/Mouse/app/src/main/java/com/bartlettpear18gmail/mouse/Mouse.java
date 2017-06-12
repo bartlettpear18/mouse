@@ -1,26 +1,13 @@
 package com.bartlettpear18gmail.mouse;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
-import static com.bartlettpear18gmail.mouse.Position.displacement;
 
 public class Mouse extends AppCompatActivity implements SensorEventListener {
 
@@ -28,30 +15,16 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mAccel;
 
-    //Server setup
-    public static Socket client;
-    private static final int SERVER_PORT = 10000;
-    private static final String SERVER_IP = "10.0.0.139";
-    public static String debug = "debug";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_mouse);
 
         //Accelerometer Set up
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_NORMAL);
-        /**
-        try {
-            client = new Socket(SERVER_IP, SERVER_PORT);
-            Log.i(debug, "server connected");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         */
 
     }
 
@@ -94,7 +67,7 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
 
             }
 
-
+            /**
             TextView accX = (TextView) findViewById(R.id.sensorX);
             String printAccX = "Accelerometer X: " + x;
             accX.setText(printAccX);
@@ -110,18 +83,14 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
             TextView disY = (TextView) findViewById(R.id.disY);
             String printDisY = "Displacement Y: " + displacement(y);
             disY.setText(printDisY);
+             */
 
         }
     }
 
 
     // Clicks
-    public void leftClick(View view) {
-        System.out.println("Left Click");
-    }
-
-    public void rightClick(View view) {
-        System.out.println("Right Click");
-    }
+    public void leftClick(View view) { System.out.println("Left Click"); }
+    public void rightClick(View view) { System.out.println("Right Click"); }
 
 }
