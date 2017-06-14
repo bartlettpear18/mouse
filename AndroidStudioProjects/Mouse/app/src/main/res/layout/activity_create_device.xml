@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.bartlettpear18gmail.mouse.CreateDevice">
+    tools:context=".AddDevice">
 
 
     <EditText
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/device_name"
-        android:textColor="@color/colorBlue"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/name"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/device_ip"
-        android:textColor="@color/colorBlue"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/ipAddress"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/server_port"
-        android:textColor="@color/colorBlue"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/port"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/device_x"
-        android:textColor="@color/colorBlue"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/screenX"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/device_y"
-        android:textColor="@color/colorBlue"
+        android:textColor="@color/colorPrimary"
         android:id="@+id/screenY"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"

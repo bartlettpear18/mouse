@@ -88,7 +88,6 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
         }
     }
 
-
     // Clicks
     public void leftClick(View view) { System.out.println("Left Click"); }
     public void rightClick(View view) { System.out.println("Right Click"); }

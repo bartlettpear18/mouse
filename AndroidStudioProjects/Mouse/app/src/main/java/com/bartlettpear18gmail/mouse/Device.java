@@ -1,16 +1,21 @@
 package com.bartlettpear18gmail.mouse;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Joel.Bartlett18 on 6/11/2017.
  */
-public class HostDevice {
+public class Device extends RealmObject {
+    @PrimaryKey
     private String name;
+
     private int ipAddress;
     private int port;
     private double dimensionX;
     private double dimensionY;
 
-    public HostDevice() {
+    public Device() {
         System.out.println("New Device Made");
     }
 

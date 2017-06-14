@@ -3,7 +3,9 @@ package com.bartlettpear18gmail.mouse;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class Start extends AppCompatActivity {
 
@@ -11,7 +13,11 @@ public class Start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, Devices.class);
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         System.out.println("Starting app");
         finish();

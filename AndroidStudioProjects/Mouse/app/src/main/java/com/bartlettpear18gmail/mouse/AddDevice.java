@@ -5,21 +5,32 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-public class CreateDevice extends AppCompatActivity {
+import io.realm.Realm;
 
-    HostDevice device = new HostDevice();
+public class AddDevice extends AppCompatActivity {
+
+    private Realm realm;
+    Device device;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_device);
 
+        realm = Realm.getDefaultInstance();
+        device = new Device();
+
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
     public void deviceName(View view) {
         EditText text = (EditText) findViewById(R.id.name);
         device.setName(text.getText().toString());
+
     }
 
     public void deviceAddress(View view) {

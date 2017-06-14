@@ -11,7 +11,7 @@
     <item>
         <shape>
             <solid
-                android:color="@color/colorBlue" />
+                android:color="@color/colorPrimary" />
         </shape>
     </item>
 
