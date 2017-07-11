@@ -1,5 +1,8 @@
 package com.company;
 
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 
@@ -8,12 +11,18 @@ import java.awt.event.InputEvent;
  */
 public class Mouse {
 
+    //Dimension variables
+    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    private double screenX = primaryScreenBounds.getMaxX();
+    private double screenY = primaryScreenBounds.getMaxY();
+
     //Establish Singleton characteristic of Mouse
     private static Mouse sInstance = null;
     public static Mouse getInstance() throws AWTException {
         if(sInstance == null) {
             sInstance = new Mouse();
         }
+        System.out.println("Singleton created");
         return sInstance;
     }
 
@@ -50,8 +59,21 @@ public class Mouse {
         mouseBot.mouseRelease(mask);
     }
 
+    //click left mouse
+    public static void leftClick(){
+        leftPress();
+        leftPress();
+    }
+
+    //press and hold left mouse
+    public static void leftHold() {
+        do{
+            leftPress();
+        } while(true);
+    }
+
     //presses right mouse
-    public static void rightClick() {
+    public static void rightPress() {
         int mask = InputEvent.BUTTON3_MASK;
         mouseBot.mousePress(mask);
     }
@@ -61,6 +83,23 @@ public class Mouse {
         int mask = InputEvent.BUTTON3_MASK;
         mouseBot.mouseRelease(mask);
     }
+
+    //click left mouse
+    public static void rightClick(){
+        rightPress();
+        rightRelease();
+    }
+
+    //press and hold left mouse
+    public static void rightHold() {
+        do{
+            rightPress();
+        } while(true);
+    }
+
+
+
+
 
     //scroll
     public static void scroll(int displacment) {

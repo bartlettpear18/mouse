@@ -1,114 +1,98 @@
 package com.company;
 
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static com.company.Presenter.getInstance;
-import static com.company.Mouse.getInstance;
-
 /**
- * Created by Joel.Bartlett18 on 5/25/2017.
+ * Created by Joel.Bartlett18 on 6/17/2017.
  */
-public class Server {
+public class Server implements Runnable{
 
     //Server variables
-    private ServerSocket server;
-    private Socket connection;
-    private int port;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private static ServerSocket server;
+    private static Socket connection;
+    private static int port = 5000;
 
-    //Singleton initializations
-    private final Mouse mMouse;
-    private final Presenter mPresenter;
+    //Stream variables
+    private static InputStreamReader inputStreamReader;
+    private static BufferedReader bufferedReader;
 
-    //Constructor creates singletons
-    public Server() throws AWTException {
-        mMouse = Mouse.getInstance();
-        mPresenter = Presenter.getInstance();
+    //testing string
+    private static String message;
 
-    }
+    /**
+     * Create input stream
+     * @throws IOException
+     */
+    private static void stream() throws IOException {
 
+        inputStreamReader = new InputStreamReader(connection.getInputStream());
+        bufferedReader = new BufferedReader(inputStreamReader);
+        message = bufferedReader.readLine();
 
-    //quick print method
-    public static void log (String str) {
-        System.out.println(str);
-    }
+        switch(message) {
+            case "Left Click":
+                Mouse.leftClick();
+                break;
+            case "Right Click":
+                Mouse.rightClick();
+                break;
+            case "Move":
+                try {
+                    Mouse.move(1, 1);
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "Forward":
+                Presenter.next();
+                break;
+            case "Previous":
+                Presenter.previous();
+                break;
+            default:
+        }
 
-    public void run(int port) throws IOException{
-        this.port = port;
-        server = new ServerSocket(port, 1);
-        while(true) {
-            try{
-                connectServer();
-                streams();
-                log(readInput());
-            } catch (EOFException e) {
+        //Testing check
+        if (message.equals("Android Test")) {
+            try {
+                Mouse.move(200,200);
+            } catch (AWTException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                close();
             }
         }
+
     }
 
     /**
-     * server accepts client socket
+     * close stream and connection
      * @throws IOException
      */
-    private void connectServer() throws IOException {
-        //log("Server connected from port " + server.getLocalPort());
-        connection = server.accept();
-        //log("Connection made");
-    }
-
-    /**
-     * Creates input and output streams
-     * @throws IOException
-     */
-    private void streams() throws IOException {
-        output = new ObjectOutputStream(connection.getOutputStream());
-        output.flush();
-        input = new ObjectInputStream(connection.getInputStream());
-        //log("Streams initialized");
-    }
-
-    /**
-     * reads input from cilent and performs action
-     * @return string message from client
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private String readInput() throws IOException, ClassNotFoundException {
-        String str = (String) input.readObject();
-
-        //---------Implement switch statement for actions here ---------//
-
-        return str;
-    }
-
-    /**
-     * closes io streams and connection socket
-     * @throws IOException
-     */
-    private void close() throws IOException {
-        output.close();
-        input.close();
+    private static void close() throws IOException {
+        inputStreamReader.close();
+        bufferedReader.close();
+        server.close();
         connection.close();
-        //log("Connection closed");
     }
 
-    /**
-     * send message to client socket
-     * @param msg
-     * @throws IOException
-     */
-    private void sendMsg (String msg) throws IOException {
-        output.writeObject(msg);
-        output.flush();
-        //log("Message sent: " + msg);
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                server = new ServerSocket(port);
+                connection = server.accept();
+
+                stream();
+                System.out.println(message);
+                close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

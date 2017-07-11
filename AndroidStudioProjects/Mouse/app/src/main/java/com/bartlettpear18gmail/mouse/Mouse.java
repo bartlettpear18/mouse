@@ -26,6 +26,8 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_NORMAL);
 
+
+
     }
 
     @Override
@@ -89,7 +91,7 @@ public class Mouse extends AppCompatActivity implements SensorEventListener {
     }
 
     // Clicks
-    public void leftClick(View view) { System.out.println("Left Click"); }
+    public void leftClick(View view) { System.out.println("Left Click");  }
     public void rightClick(View view) { System.out.println("Right Click"); }
 
 }

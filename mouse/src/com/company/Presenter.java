@@ -29,9 +29,7 @@ public class Presenter {
     }
 
     //back solide
-    public static void previous() {
-        presenterBot.keyPress(KeyEvent.VK_LEFT);
-    }
+    public static void previous() { presenterBot.keyPress(KeyEvent.VK_LEFT); }
 
     // --------- Implement laser pointer functionality in future update ---------//
 
