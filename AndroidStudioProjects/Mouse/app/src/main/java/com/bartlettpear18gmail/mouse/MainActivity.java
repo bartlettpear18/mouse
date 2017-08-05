@@ -7,6 +7,7 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void startPresentation (View view) {
         Intent intent = new Intent(this, com.bartlettpear18gmail.mouse.Presentation.class);
+        startActivity(intent);
+    }
+
+    public void startNetwork(View view) {
+        Intent intent = new Intent(this, com.bartlettpear18gmail.mouse.Network.class);
         startActivity(intent);
     }
 

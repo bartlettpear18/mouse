@@ -9,35 +9,51 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-    android:background="@color/colorPrimaryDark"
-    >
+    android:background="@color/colorPrimaryDark">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Mouse"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginEnd="0dp"
-        android:clickable="true"
-        android:onClick="startMouse"
-        android:drawableRight="@drawable/mouse"
-        style="?android:attr/borderlessButtonStyle" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Presentation"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="400dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginEnd="0dp"
-        android:clickable="true"
-        android:onClick="startPresentation"
-        android:drawableRight="@drawable/arrows"
-        style="?android:attr/borderlessButtonStyle" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Mouse"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginEnd="0dp"
+            android:clickable="true"
+            android:onClick="startMouse"
+            android:drawableRight="@drawable/mouse"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Presentation"
+            android:clickable="true"
+            android:onClick="startPresentation"
+            android:drawableRight="@drawable/arrows"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Network"
+            android:clickable="true"
+            android:drawableRight="@drawable/mouse"
+            android:onClick="startNetwork"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

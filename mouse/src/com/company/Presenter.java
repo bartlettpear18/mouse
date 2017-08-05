@@ -18,18 +18,18 @@ public class Presenter {
     }
 
     //Create PC Bot for Presenter
-    private static Robot presenterBot = null;
+    private static Robot presentorBot = null;
     private Presenter() throws AWTException {
-        presenterBot = new Robot();
+        presentorBot = new Robot();
     }
 
     //forward slide
-    public static void next(){
-        presenterBot.keyPress(KeyEvent.VK_RIGHT);
+    public void next(){
+        presentorBot.keyPress(KeyEvent.VK_RIGHT);
     }
 
     //back solide
-    public static void previous() { presenterBot.keyPress(KeyEvent.VK_LEFT); }
+    public void previous() { presentorBot.keyPress(KeyEvent.VK_LEFT); }
 
     // --------- Implement laser pointer functionality in future update ---------//
 

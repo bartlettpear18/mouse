@@ -9,7 +9,7 @@
     <string name="server_port">Server Port </string>
     <string name="device_x">Device Screen Width </string>
     <string name="device_y">Device Screen Length </string>
-
+    <string name="set_ip">---</string>
 
     <string name="action_settings">blarg</string>
 </resources>

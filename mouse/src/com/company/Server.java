@@ -1,98 +1,78 @@
 package com.company;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by Joel.Bartlett18 on 6/17/2017.
- */
 public class Server implements Runnable{
+
+
+    private Thread thread = null;
 
     //Server variables
     private static ServerSocket server;
-    private static Socket connection;
+    private static Socket socket;
     private static int port = 5000;
 
     //Stream variables
-    private static InputStreamReader inputStreamReader;
-    private static BufferedReader bufferedReader;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
+    private byte[] buffer = new byte[1024];
+    int read;
 
-    //testing string
-    private static String message;
 
-    /**
-     * Create input stream
-     * @throws IOException
-     */
-    private static void stream() throws IOException {
-
-        inputStreamReader = new InputStreamReader(connection.getInputStream());
-        bufferedReader = new BufferedReader(inputStreamReader);
-        message = bufferedReader.readLine();
-
-        switch(message) {
-            case "Left Click":
-                Mouse.leftClick();
-                break;
-            case "Right Click":
-                Mouse.rightClick();
-                break;
-            case "Move":
-                try {
-                    Mouse.move(1, 1);
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case "Forward":
-                Presenter.next();
-                break;
-            case "Previous":
-                Presenter.previous();
-                break;
-            default:
-        }
-
-        //Testing check
-        if (message.equals("Android Test")) {
-            try {
-                Mouse.move(200,200);
-            } catch (AWTException e) {
-                e.printStackTrace();
-            }
-        }
-
+    private void setup() throws IOException {
+        server = new ServerSocket(port);
+        socket = server.accept();
+        System.out.println("AndroidServer connected to Socket");
+    }
+    private void streams() throws IOException {
+        outputStream = socket.getOutputStream();
+        inputStream = socket.getInputStream();
+        System.out.println("Streams made");
     }
 
-    /**
-     * close stream and connection
-     * @throws IOException
-     */
-    private static void close() throws IOException {
-        inputStreamReader.close();
-        bufferedReader.close();
-        server.close();
-        connection.close();
+    private byte[] recieveArray() throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int read;
+        byte[] data = new byte[1];
+
+        while((read = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data,0,read);
+            System.out.println(data[0]);
+            byte statePacket = data[0];
+            System.out.println(Integer.toBinaryString(statePacket));
+        }
+        buffer.flush();
+        return data;
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                server = new ServerSocket(port);
-                connection = server.accept();
+        try {
+            setup();
+            streams();
+            System.out.println("Checkpoint");
 
-                stream();
-                System.out.println(message);
-                close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            while(true) {
+                recieveArray();
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void start(String name) {
+        if(thread == null) {
+            thread = new Thread(this, name);
+            thread.setDaemon(true);
+            thread.start();
+            System.out.println("Starting " + thread.getName());
         }
     }
 }

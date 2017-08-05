@@ -12,9 +12,9 @@ import java.awt.event.InputEvent;
 public class Mouse {
 
     //Dimension variables
-    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-    private double screenX = primaryScreenBounds.getMaxX();
-    private double screenY = primaryScreenBounds.getMaxY();
+    private Rectangle2D primaryScreenBounds;
+    private double screenX;
+    private double screenY;
 
     //Establish Singleton characteristic of Mouse
     private static Mouse sInstance = null;
@@ -31,7 +31,12 @@ public class Mouse {
     private static Robot mouseBot = null;
     private Mouse() throws AWTException {
         mouseBot = new Robot();
+        primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        screenX = primaryScreenBounds.getMaxX();
+        screenY = primaryScreenBounds.getMaxY();
+
     }
+
 
     /**
      * Move mouse based off displacement calculated and sent from phone
@@ -48,32 +53,32 @@ public class Mouse {
     }
 
     //presses left mouse
-    public static void leftPress() {
+    public void leftPress() {
         int mask = InputEvent.BUTTON1_MASK;
         mouseBot.mousePress(mask);
     }
 
     //releases left click
-    public static void leftRelease() {
+    public void leftRelease() {
         int mask = InputEvent.BUTTON1_MASK;
         mouseBot.mouseRelease(mask);
     }
 
     //click left mouse
-    public static void leftClick(){
+    public void leftClick(){
         leftPress();
         leftPress();
     }
 
     //press and hold left mouse
-    public static void leftHold() {
+    public void leftHold() {
         do{
             leftPress();
         } while(true);
     }
 
     //presses right mouse
-    public static void rightPress() {
+    public void rightPress() {
         int mask = InputEvent.BUTTON3_MASK;
         mouseBot.mousePress(mask);
     }
@@ -85,13 +90,13 @@ public class Mouse {
     }
 
     //click left mouse
-    public static void rightClick(){
+    public void rightClick(){
         rightPress();
         rightRelease();
     }
 
     //press and hold left mouse
-    public static void rightHold() {
+    public void rightHold() {
         do{
             rightPress();
         } while(true);
@@ -102,7 +107,7 @@ public class Mouse {
 
 
     //scroll
-    public static void scroll(int displacment) {
+    public void scroll(int displacment) {
         mouseBot.mouseWheel(displacment);
     }
 }
