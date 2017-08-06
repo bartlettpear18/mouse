@@ -10,7 +10,7 @@ public class Start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Mouse.class);
         startActivity(intent);
         System.out.println("Starting app");
         finish();

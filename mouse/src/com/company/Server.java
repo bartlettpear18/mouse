@@ -1,14 +1,11 @@
 package com.company;
 
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
-
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server implements Runnable{
-
 
     private Thread thread = null;
 
@@ -23,7 +20,24 @@ public class Server implements Runnable{
     private byte[] buffer = new byte[1024];
     int read;
 
+    //Robot
+    private Mouse mouse = null;
+    private char[] states = new char[3];
 
+    //Constructor
+    public Server() throws AWTException { mouse = new Mouse(); }
+
+    //Thread start
+    public void start(String name) {
+        if(thread == null) {
+            thread = new Thread(this, name);
+            thread.setDaemon(true);
+            thread.start();
+            System.out.println("Starting " + thread.getName());
+        }
+    }
+
+    //Server setup
     private void setup() throws IOException {
         server = new ServerSocket(port);
         socket = server.accept();
@@ -34,20 +48,39 @@ public class Server implements Runnable{
         inputStream = socket.getInputStream();
         System.out.println("Streams made");
     }
+    private void close() throws IOException {
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+        socket.close();
+        server.close();
+        System.out.println("Streams and sockets closed");
+    }
 
-    private byte[] recieveArray() throws IOException {
+    //Data transfer
+    private byte[] receiveArray() throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int read;
-        byte[] data = new byte[1];
+        byte[] data = new byte[3];
 
         while((read = inputStream.read(data, 0, data.length)) != -1) {
             buffer.write(data,0,read);
-            System.out.println(data[0]);
-            byte statePacket = data[0];
-            System.out.println(Integer.toBinaryString(statePacket));
+            for (byte state : data) {
+                System.out.print(String.valueOf(state) + " ");
+            }
+            System.out.println();
         }
         buffer.flush();
         return data;
+    }
+    private void readPacket (byte[] packet) throws AWTException {
+        char[] tempStates = Integer.toBinaryString(packet[0]).toCharArray();
+        if(tempStates[0] != states[0]) { mouse.toggleLeft(); }
+        if(tempStates[1] != states[1]) { mouse.toggleRight(); }
+        if(tempStates[2] != states[2]) { mouse.toggleMiddle(); }
+        states = tempStates;
+
+        mouse.move((int) states[1], (int) states[2]);
     }
 
     @Override
@@ -55,24 +88,23 @@ public class Server implements Runnable{
         try {
             setup();
             streams();
-            System.out.println("Checkpoint");
 
+            //Constantly sending packets while running
             while(true) {
-                recieveArray();
+                readPacket(receiveArray());
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-    }
-
-    public void start(String name) {
-        if(thread == null) {
-            thread = new Thread(this, name);
-            thread.setDaemon(true);
-            thread.start();
-            System.out.println("Starting " + thread.getName());
+        } catch (AWTException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }

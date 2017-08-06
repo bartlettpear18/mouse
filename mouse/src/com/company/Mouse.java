@@ -1,113 +1,126 @@
 package com.company;
 
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Created by Joel.Bartlett18 on 6/9/2017.
  */
-public class Mouse {
+public class Mouse implements MouseListener{
 
-    //Dimension variables
-    private Rectangle2D primaryScreenBounds;
-    private double screenX;
-    private double screenY;
-
-    //Establish Singleton characteristic of Mouse
-    private static Mouse sInstance = null;
-    public static Mouse getInstance() throws AWTException {
-        if(sInstance == null) {
-            sInstance = new Mouse();
-        }
-        System.out.println("Singleton created");
-        return sInstance;
-    }
-
-
-    //Create PC Bot for Mouse
+    //Robot for mouse
     private static Robot mouseBot = null;
-    private Mouse() throws AWTException {
-        mouseBot = new Robot();
-        primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        screenX = primaryScreenBounds.getMaxX();
-        screenY = primaryScreenBounds.getMaxY();
 
-    }
+    //Boolean states of mouse
+    private boolean leftState = false;
+    private boolean rightState = false;
+    private boolean middleState = false;
 
+    public Mouse() throws AWTException { mouseBot = new Robot(); }
 
     /**
      * Move mouse based off displacement calculated and sent from phone
-     * @param x
-     * @param y
+     * @param xDisplacment
+     * @param yDisplacment
      */
-    public static void move( int x, int y) throws AWTException {
-        //Get Current Position of Mouse
+    public static void move( int xDisplacment, int yDisplacment) throws AWTException {
         Point currentPos = MouseInfo.getPointerInfo().getLocation();
-        int curX = (int) currentPos.getX();
-        int curY = (int) currentPos.getY();
-        //Move mouse based off current position and displacement of phone
-        mouseBot.mouseMove(curX + x,curY - y);
+        int currentX = (int) currentPos.getX();
+        int currentY = (int) currentPos.getY();
+        mouseBot.mouseMove(currentX + xDisplacment,currentY - yDisplacment);
     }
+
+    //Change left button state
+    public void toggleLeft() {
+        if(leftState) {
+            leftRelease();
+        } else {
+            leftPress();
+        }
+    }
+    //Change right button state
+    public void toggleRight() {
+        if(rightState) {
+            rightPress();
+        } else {
+            rightRelease();
+        }
+    }
+    //Change middle button state
+    public void toggleMiddle() {
+        if(middleState) {
+            middlePress();
+        } else {
+            middleRelease();
+        }
+
+    }
+
 
     //presses left mouse
-    public void leftPress() {
+    private void leftPress() {
         int mask = InputEvent.BUTTON1_MASK;
         mouseBot.mousePress(mask);
     }
-
     //releases left click
-    public void leftRelease() {
+    private void leftRelease() {
         int mask = InputEvent.BUTTON1_MASK;
         mouseBot.mouseRelease(mask);
     }
-
-    //click left mouse
-    public void leftClick(){
-        leftPress();
-        leftPress();
-    }
-
-    //press and hold left mouse
-    public void leftHold() {
-        do{
-            leftPress();
-        } while(true);
-    }
-
     //presses right mouse
-    public void rightPress() {
+    private void rightPress() {
         int mask = InputEvent.BUTTON3_MASK;
         mouseBot.mousePress(mask);
     }
-
     //releases right mouse
-    public static void rightRelease() {
+    private void rightRelease() {
         int mask = InputEvent.BUTTON3_MASK;
         mouseBot.mouseRelease(mask);
     }
-
-    //click left mouse
-    public void rightClick(){
-        rightPress();
-        rightRelease();
+    //presses middle mouse
+    private void middlePress() {
+        int mask = InputEvent.BUTTON2_MASK;
+        mouseBot.mousePress(mask);
+    }
+    //releases middle mouse
+    private void middleRelease() {
+        int mask = InputEvent.BUTTON2_MASK;
+        mouseBot.mouseRelease(mask);
     }
 
-    //press and hold left mouse
-    public void rightHold() {
-        do{
-            rightPress();
-        } while(true);
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            leftState = true;
+            System.out.println("Left state set to true");
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
+            rightState = true;
+            System.out.println("Right state set to true");
+        } else {
+            middleState = true;
+            System.out.println("Middle state set to true;");
+        }
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            leftState = false;
+            System.out.println("Left state set to false");
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
+            rightState = false;
+            System.out.println("Right state set to false");
+        } else {
+            middleState = false;
+            System.out.println("Middle state set to false;");
+        }
     }
 
-
-
-
-
-    //scroll
-    public void scroll(int displacment) {
-        mouseBot.mouseWheel(displacment);
-    }
 }

@@ -26,12 +26,12 @@ public class Mouse extends AppCompatActivity implements SensorEventListener{
     public Mouse() {}
 
     //Packet variables
-    private int movementX = 0;
-    private int movementY = 0;
+    private int movementX = 5;
+    private int movementY = -5;
 
     //Sensor setup
     private SensorManager sensorManager;
-    private final double Z_LIMIT = 0.25;
+    private final double Z_LIMIT = 1.0;
     private float xAccel;
     private float yAccel;
 
@@ -42,12 +42,13 @@ public class Mouse extends AppCompatActivity implements SensorEventListener{
         setContentView(R.layout.activity_mouse);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        Log.d(tag, "Sensor Manager instantiated");
 
 
-        Client client = new Client();
-        Log.d(tag, "Client made");
-        client.execute();
+//        Client client = new Client();
+//        Log.d(tag, "Client made");
+//        client.execute();
     }
 
 
@@ -71,16 +72,20 @@ public class Mouse extends AppCompatActivity implements SensorEventListener{
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            if(event.values[2] < Z_LIMIT) {
-                xAccel =  event.values[0];
-                yAccel =  event.values[1];
-                Log.d(tag, "X Movement: " + xAccel + "\nY Movement: " + yAccel);
-            } else {
-                xAccel = 0;
-                yAccel = 0;
-                Log.d(tag, "X and Y are 0, as Z is moving");
-            }
+        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            xAccel =  event.values[0];
+            yAccel =  event.values[1];
+            Log.d(tag, "X Movement: " + xAccel + "\nY Movement: " + yAccel + "\nzAccel: " + event.values[2]);
+
+//            if(event.values[2] < Z_LIMIT) {
+//                xAccel =  event.values[0];
+//                yAccel =  event.values[1];
+//                Log.d(tag, "X Movement: " + xAccel + "\nY Movement: " + yAccel);
+//            } else {
+//                xAccel = 0;
+//                yAccel = 0;
+//                Log.d(tag, "X and Y are 0, as Z is moving");
+//            }
         }
     }
 
