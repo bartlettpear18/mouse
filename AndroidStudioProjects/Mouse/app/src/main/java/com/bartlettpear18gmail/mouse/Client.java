@@ -3,11 +3,8 @@ package com.bartlettpear18gmail.mouse;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.regex.Matcher;
@@ -31,6 +28,9 @@ public class Client extends AsyncTask<Void, Void, Void> {
     public static LEFT left = LEFT.OFF;
     public static RIGHT right = RIGHT.OFF;
     public static MIDDLE middle = MIDDLE.OFF;
+
+    //Accerelometer setup
+    private Mouse mouse = new Mouse();
 
     //Regex Base String
     private final String IP_PATTERN =
@@ -63,11 +63,11 @@ public class Client extends AsyncTask<Void, Void, Void> {
     public String getAdddress() { return ip; }
 
     //Socket methods
-    private void createSocket() throws IOException {
+    private void setup() throws IOException {
         socket = new Socket(ip, port);
         Log.d(tag, "Socket created");
     }
-    private void setupStreams() throws IOException {
+    private void streams() throws IOException {
         outputStream = socket.getOutputStream();
         inputStream = socket.getInputStream();
         Log.d(tag, "Streams created");
@@ -77,13 +77,14 @@ public class Client extends AsyncTask<Void, Void, Void> {
         outputStream.flush();
         outputStream.close();
         inputStream.close();
+        Log.d(tag, "Socket and Streams closed");
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            createSocket();
-            setupStreams();
+            setup();
+            streams();
             Log.d(tag,"Running here");
             while(true) {
                 sendTest();
@@ -102,6 +103,21 @@ public class Client extends AsyncTask<Void, Void, Void> {
             }
         }
         return null;
+    }
+
+    public void streamPacket() throws IOException {
+        byte[] packet = new byte[3];
+        packet[0] = (byte) (left.getState() | right.getState() | middle.getState());
+        packet[1] = (byte) ((0xFF) & mouse.getMovementX());
+        packet[2] = (byte) ((0xFF) & mouse.getMovementY());
+
+        for (byte data : packet) {
+            Log.d(tag, String.valueOf(data));
+        }
+
+        outputStream.write(packet);
+        Log.d(tag, "State packet sent");
+
     }
 
     public void sendTest() throws ClassNotFoundException, IOException, InterruptedException {

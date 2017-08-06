@@ -17,16 +17,23 @@ import java.io.IOException;
 import static com.bartlettpear18gmail.mouse.Client.*;
 
 
-public class Mouse extends AppCompatActivity {
+public class Mouse extends AppCompatActivity implements SensorEventListener{
 
     //Debug tag
     private static String tag = "Debug";
 
-    //Accelerometer setup
-    private SensorManager mSensorManager;
-    private Sensor mAccel;
-    private static int x = 0;
-    private static int y = 0;
+    //Constructor
+    public Mouse() {}
+
+    //Packet variables
+    private int movementX = 0;
+    private int movementY = 0;
+
+    //Sensor setup
+    private SensorManager sensorManager;
+    private final double Z_LIMIT = 0.25;
+    private float xAccel;
+    private float yAccel;
 
 
     @Override
@@ -34,82 +41,20 @@ public class Mouse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mouse);
 
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+
 
         Client client = new Client();
         Log.d(tag, "Client made");
         client.execute();
     }
 
-//        //Accelerometer Set up
-//        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-//        mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_NORMAL);
 
+    //Accelerometer values
+    public int getMovementX() { return movementX; }
+    public int getMovementY() { return movementY; }
 
-//
-//    @Override
-//    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-//        //System.out.println("Accuracy changed by: " + accuracy);
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        mSensorManager.unregisterListener(this);
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_NORMAL);
-//    }
-//
-//    @Override
-//    public void onSensorChanged(SensorEvent sensorEvent) {
-//        Sensor acc = sensorEvent.sensor;
-//
-//        if (acc.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-//            float tempX = sensorEvent.values[0];
-//            float tempY = sensorEvent.values[1];
-//            float tempZ = sensorEvent.values[2];
-//
-//            double x;
-//            double y;
-//            double z = (double) Math.round(tempZ * 100) / 100;
-//            if (Math.abs(z) > 1) {
-//                x = 0;
-//                y = 0;
-//            } else {
-//                x = Math.round(tempX * 100) / 100;
-//                y = Math.round(tempY * 100) / 100;
-//
-//
-//            }
-//
-//            /**
-//            TextView accX = (TextView) findViewById(R.id.sensorX);
-//            String printAccX = "Accelerometer X: " + x;
-//            accX.setText(printAccX);
-//
-//            TextView accY = (TextView) findViewById(R.id.sensorY);
-//            String printAccY = "Accelerometer Y: " + y;
-//            accY.setText(printAccY);
-//
-//            TextView disX = (TextView) findViewById(R.id.disX);
-//            String printDisX = "Displacement X: " + displacement(x);
-//            disX.setText(printDisX);
-//
-//            TextView disY = (TextView) findViewById(R.id.disY);
-//            String printDisY = "Displacement Y: " + displacement(y);
-//            disY.setText(printDisY);
-//             */
-//
-//        }
-//    }
-//
-//    public static int getX() { return x; }
-//    public static int getY() { return y; }
-//
     // Clicks
     public void leftClick(View view) {
         if(left == LEFT.OFF) { left = LEFT.ON; }
@@ -120,6 +65,23 @@ public class Mouse extends AppCompatActivity {
         if(right == RIGHT.OFF) { right = RIGHT.ON; }
         else { right = RIGHT.OFF; }
         Log.d(tag, "Sending right");
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if(event.values[2] < Z_LIMIT) {
+                xAccel =  event.values[0];
+                yAccel =  event.values[1];
+                Log.d(tag, "X Movement: " + xAccel + "\nY Movement: " + yAccel);
+            } else {
+                xAccel = 0;
+                yAccel = 0;
+                Log.d(tag, "X and Y are 0, as Z is moving");
+            }
+        }
     }
 
 }
